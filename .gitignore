@@ -1,69 +1,66 @@
-# Prerequisites
-*.d
+.vs/
+*.user
+*.userosscache
+*.suo
+*.VC.db
+*.VC.opendb
+*.sln.docstates
+*.sln
+*.vcxproj
+*.vcxproj.filters
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
+Debug/
+Release/
+x64/
+x86/
+build/
+Build/
+out/
+bin/
+obj/
+
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+CTestTestfile.cmake
+Makefile
+install_manifest.txt
+
+.ninja_deps
+.ninja_log
+build.ninja
+
 *.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-*.so.*
-
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
+*.o
+*.lo
 *.la
-*.a
+*.al
+*.lai
+*.pch
+*.pdb
+*.ilk
+*.idb
+*.exp
 *.lib
-
-# Executables
+*.dll
 *.exe
 *.out
 *.app
 
-# Build directories
-build/
-Build/
-build-*/
-
-# CMake generated files
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-install_manifest.txt
-compile_commands.json
-
-# Temporary files
-*.tmp
 *.log
-*.bak
-*.swp
+*.tmp
+*.temp
 
-# vcpkg
-vcpkg_installed/
+*.gcda
+*.gcno
+*.gcov
+coverage/
 
-# debug information files
-*.dwo
+installed/
+.conan/
 
-# test output & cache
-Testing/
-.cache/
+.vscode/
+
+.DS_Store
+Thumbs.db
