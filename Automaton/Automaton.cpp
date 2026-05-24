@@ -1,26 +1,5 @@
 #include "Automaton.hpp"
 
-bool Automaton::hasState(size_t id) const
-{
-    return std::find(m_states.begin(), m_states.end(), id) != m_states.end();
-}
-
-bool Automaton::hasAnyTransitions(size_t state) const
-{
-    for (const auto& transition : m_transitions)
-        if (transition.from == state) return true;
-    return false;
-}
-
-bool Automaton::symbolIsInAlphabet(char symbol) const
-{
-    for (char s : m_alphabet)
-    {
-        if (s == symbol) return true;
-    }
-    return false;
-}
-
 void Automaton::pushStatesWithEpsilon(std::vector<size_t>& closure, std::vector<size_t>& stack, size_t stateId) const
 {
     for (const auto& transition : m_transitions)
@@ -102,7 +81,7 @@ void Automaton::addTransition(size_t from, char symbol, size_t to)
 {
     if (!hasState(from)) throw StateExistsException(from, false);
     if (!hasState(to)) throw StateExistsException(to, false);
-	if (!symbolIsInAlphabet(symbol)) throw BadSymbolException(symbol);
+	if (!symbolIsInAlphabet(symbol) && symbol!=EPSILON) throw BadSymbolException(symbol);
 
     m_transitions.push_back({ from, symbol, to });
 }
@@ -144,7 +123,47 @@ bool Automaton::isDeterministic() const
     return true;
 }
 
-Automaton Automaton::reverse() const
+Automaton Automaton::getDeterministic() const
+{
+    Automaton dfa(m_alphabet);
+    std::vector<std::vector<size_t>> stateSubsets;
+    stateSubsets.push_back(bubbleSort(getEpsilonClosure(m_startStates)));
+
+    pushReachableSubsets(dfa, stateSubsets);
+
+
+    for (size_t i = 0; i < stateSubsets.size(); i++)
+    {
+        dfa.createNewState(i, i == 0, containsFinalState(stateSubsets[i]));
+    }
+
+    addSubsetTransitions(dfa, stateSubsets);
+
+    return dfa;
+}
+
+void Automaton::determinise()
+{
+    *this = getDeterministic();
+}
+
+Automaton Automaton::getMinimised() const
+{
+    Automaton minimised = *this;
+    minimised.determinise();
+    minimised.reverse();
+    minimised.determinise();
+    minimised.reverse();
+    minimised.determinise();
+    return minimised;
+}
+
+void Automaton::minimise()
+{
+    *this = getMinimised();
+}
+
+Automaton Automaton::getReversed() const
 {
     Automaton reversed(m_alphabet);
     reversed.m_states = m_states;
@@ -159,9 +178,60 @@ Automaton Automaton::reverse() const
     return reversed;
 }
 
-const std::vector<char>& Automaton::getAlphabet() const
+void Automaton::reverse()
 {
-    return m_alphabet;
+    *this = getReversed();
 }
 
-Automaton::~Automaton() {}
+std::vector<size_t> Automaton::bubbleSort(const std::vector<size_t>& arr) const
+{
+    std::vector<size_t> result = arr;
+    int size = arr.size();
+    for (size_t i = 0; i < size; i++)
+    {
+        for (size_t j = 0; j < size - i - 1; j++)
+        {
+            if (result[j] > result[j + 1])
+            {
+                std::swap(result[j], result[j + 1]);
+            }
+        }
+    }
+    return result;
+}
+
+void Automaton::pushReachableSubsets(Automaton& dfa, std::vector<std::vector<size_t>>& stateSubsets) const
+{
+    for (size_t i = 0; i < stateSubsets.size(); i++)
+    {
+        for (char symbol : m_alphabet)
+        {
+            std::vector<size_t> nextSubset = bubbleSort(getEpsilonClosure(getNextStates(stateSubsets[i], symbol)));
+            if (std::find(stateSubsets.begin(), stateSubsets.end(), nextSubset) == stateSubsets.end())
+            {
+                stateSubsets.push_back(nextSubset);
+            }
+        }
+    }
+}
+
+void Automaton::addSubsetTransitions(Automaton& dfa, const std::vector<std::vector<size_t>>& stateSubsets) const
+{
+    for (size_t i = 0; i < stateSubsets.size(); i++)
+    {
+        for (char symbol : dfa.m_alphabet)
+        {
+            std::vector<size_t> nextSubset = bubbleSort(getEpsilonClosure(getNextStates(stateSubsets[i], symbol)));
+            auto it = std::find(stateSubsets.begin(), stateSubsets.end(), nextSubset);
+            if (it != stateSubsets.end())
+            {
+                size_t nextIndex = std::distance(stateSubsets.begin(), it);
+                dfa.addTransition(i, symbol, nextIndex);
+            }
+            else
+            {
+                throw Exception("Losho: izpusnal si nqkoi subset.");
+            }
+        }
+    }
+}

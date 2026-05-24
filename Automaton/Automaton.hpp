@@ -2,7 +2,8 @@
 #include <map>
 #include <vector>
 #include <string>
-#include <algorithm>
+#include <set>
+#include <iostream>
 
 #include "Exception.hpp"
 #include "StateExistsException.hpp"
@@ -20,9 +21,32 @@ struct Transition
 class Automaton
 {
 public:
+    void print() const
+    {
+        std::cout << "States: ";
+        for (size_t state : m_states)
+        {
+            std::cout << state << " ";
+        }
+        std::cout << "\nStart: ";
+        for (size_t state : m_startStates)
+        {
+            std::cout << state << " ";
+        }
+        std::cout << "\nFinal: ";
+        for (size_t state : m_finalStates)
+        {
+            std::cout << state << " ";
+        }
+        std::cout << "\nTransitions:\n";
+        for (const auto& transition : m_transitions)
+        {
+            std::cout << transition.from << " --" << (transition.symbol == EPSILON ? "(epsilon)" : std::string(1, transition.symbol)) << "--> " << transition.to << "\n";
+        }
+    }
+public:
 
     Automaton(const std::vector<char> alphabet);
-
 
     void createNewState(size_t id, bool isStart, bool isFinal);
 
@@ -30,18 +54,53 @@ public:
 
     bool recognise(const std::string& word) const;
 
+
+    Automaton getReversed() const;
+    void reverse();
+
     bool isDeterministic() const;
+    Automaton getDeterministic() const;
 
-    Automaton reverse() const;
+	void determinise();
 
-    const std::vector<char>& getAlphabet() const;
+    Automaton getMinimised() const;
 
-    ~Automaton();
+	void minimise();
+
+    const std::vector<char>& getAlphabet() const
+    {
+        return m_alphabet;
+    }
+
+    ~Automaton() = default;
 
 private:
-    bool hasState(size_t id) const;
-    bool hasAnyTransitions(size_t state) const;
-    bool symbolIsInAlphabet(char symbol) const;
+    bool hasState(size_t id) const
+    {
+        for (size_t state : m_states)
+            if (state == id) return true;
+        return false;
+    }
+    bool hasAnyTransitions(size_t state) const
+    {
+        for (const Transition& transition : m_transitions)
+            if (transition.from == state) return true;
+        return false;
+    }
+    bool symbolIsInAlphabet(char symbol) const
+    {
+        for (char s : m_alphabet)
+        {
+            if (s == symbol) return true;
+        }
+        return false;
+    }
+
+    std::vector<size_t> bubbleSort(const std::vector<size_t>& arr) const;
+
+    void pushReachableSubsets(Automaton& dfa, std::vector<std::vector<size_t>>& stateSubsets) const;
+
+    void addSubsetTransitions(Automaton& dfa, const std::vector<std::vector<size_t>>& stateSubsets) const;
 
 
     void pushStatesWithEpsilon(std::vector<size_t>& closure, std::vector<size_t>& stack, size_t stateId) const;

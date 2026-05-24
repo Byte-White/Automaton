@@ -31,8 +31,7 @@ void hasEvenOnes()
 	automaton.addTransition(0, '1', 1);
 	automaton.addTransition(1, '0', 1);
 	automaton.addTransition(1, '1', 0);
-
-	std::cout.flags(std::ios::boolalpha);
+	
 	std::cout << "automaton('101'): " << automaton.recognise("101") << std::endl;
 
 }
@@ -47,18 +46,38 @@ void isABC()
 	automaton.addTransition(0, 'a', 1);
 	automaton.addTransition(1, 'b', 2);
 	automaton.addTransition(2, 'c', 3);
-	std::cout.flags(std::ios::boolalpha);
 	std::cout << "automaton('abc')" << automaton.recognise("abc") << std::endl;
-	automaton = automaton.reverse();
+	automaton.reverse();
 	std::cout << "reversed('cba'): " << automaton.recognise("cba") << std::endl;
+}
+
+void nonDeterministic()
+{
+	// has ab
+	Automaton automaton({ 'a','b' });
+	automaton.createNewState(0, true, false);
+	automaton.createNewState(1, false, false);
+	automaton.createNewState(2, false, true);
+	automaton.addTransition(0, 'a', 0);
+	automaton.addTransition(0, 'b', 0);
+	automaton.addTransition(0, 'a', 1);
+	automaton.addTransition(1, 'b', 2);
+	std::cout << "notdet: " << automaton.recognise("abab") << std::endl;
+	automaton.print();
+	automaton.minimise();
+	std::cout << "det min: " << automaton.recognise("abab") << std::endl;;
+	automaton.print();
 }
 
 int main()
 {
+	std::cout.flags(std::ios::boolalpha);
 	std::cout << "--HAS ABBA--"<< std::endl;
 	hasABBA();
 	std::cout << "--HAS EVEN ONES--"<< std::endl;
 	hasEvenOnes();
 	std::cout << "--IS ABC--"<< std::endl;
 	isABC();
+	std::cout << "--DETERMINISE--" << std::endl;
+	nonDeterministic();
 }
