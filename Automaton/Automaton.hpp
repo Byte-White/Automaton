@@ -67,6 +67,12 @@ public:
 
 	void minimise();
 
+    friend Automaton Union(const Automaton& lhs, const Automaton& rhs);
+
+    friend Automaton Concat(const Automaton& lhs, const Automaton& rhs);
+
+    friend Automaton Star(const Automaton& automaton);
+
     const std::vector<char>& getAlphabet() const
     {
         return m_alphabet;

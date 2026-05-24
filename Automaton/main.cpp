@@ -69,9 +69,22 @@ void nonDeterministic()
 	automaton.print();
 }
 
+void KleeneStar()
+{
+	Automaton automaton({ 'a', 'b' });
+	automaton.createNewState(0, true, false);
+	automaton.createNewState(1, false, false);
+	automaton.createNewState(2, false, true);
+	automaton.addTransition(0, 'a', 1);
+	automaton.addTransition(1, 'b', 2);
+	automaton = Star(automaton);
+	std::cout << automaton.recognise("ababab");
+}
+
 int main()
 {
 	std::cout.flags(std::ios::boolalpha);
+	
 	std::cout << "--HAS ABBA--"<< std::endl;
 	hasABBA();
 	std::cout << "--HAS EVEN ONES--"<< std::endl;
@@ -80,4 +93,6 @@ int main()
 	isABC();
 	std::cout << "--DETERMINISE--" << std::endl;
 	nonDeterministic();
+	std::cout << "--KLEENE STAR--" << std::endl;
+	KleeneStar();
 }

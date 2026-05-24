@@ -235,3 +235,115 @@ void Automaton::addSubsetTransitions(Automaton& dfa, const std::vector<std::vect
         }
     }
 }
+
+Automaton Union(const Automaton& lhs, const Automaton& rhs)
+{
+    std::vector<char> newAlphabet = lhs.m_alphabet;
+    for (char symbol : rhs.m_alphabet)
+    {
+        if (!lhs.symbolIsInAlphabet(symbol))
+        {
+            newAlphabet.push_back(symbol);
+        }
+    }
+    Automaton result(newAlphabet);
+    result.m_states = lhs.m_states;
+    result.m_startStates = lhs.m_startStates;
+    result.m_finalStates = lhs.m_finalStates;
+    result.m_transitions = lhs.m_transitions;
+
+    size_t offset = 0;
+    for (size_t stateId : lhs.m_states)
+        if (offset < stateId) offset = stateId;
+    offset++;
+
+    for (size_t stateId : rhs.m_states)
+    {
+        result.m_states.push_back(stateId + offset);
+    }
+    for (size_t startState : rhs.m_startStates)
+    {
+        result.m_startStates.push_back(startState + offset);
+    }
+    for (size_t finalState : rhs.m_finalStates)
+    {
+        result.m_finalStates.push_back(finalState + offset);
+    }
+    for (const auto& transition : rhs.m_transitions)
+    {
+        result.m_transitions.push_back({ transition.from + offset, transition.symbol, transition.to + offset });
+    }
+    return result;
+}
+
+Automaton Concat(const Automaton& lhs, const Automaton& rhs)
+{
+    std::vector<char> newAlphabet = lhs.m_alphabet;
+    for (char symbol : rhs.m_alphabet)
+    {
+        if (!lhs.symbolIsInAlphabet(symbol))
+        {
+            newAlphabet.push_back(symbol);
+        }
+    }
+    Automaton result(newAlphabet);
+    result.m_states = lhs.m_states;
+    result.m_startStates = lhs.m_startStates;
+
+    size_t offset = 0;
+    for (size_t stateId : lhs.m_states)
+        if (offset < stateId) offset = stateId;
+    offset++;
+
+    for (size_t stateId : rhs.m_states)
+    {
+        result.m_states.push_back(stateId + offset);
+    }
+    for (size_t startState : rhs.m_startStates)
+    {
+        result.m_startStates.push_back(startState + offset);
+    }
+    for (size_t finalState : rhs.m_finalStates)
+    {
+        result.m_finalStates.push_back(finalState + offset);
+    }
+    for (const auto& transition : rhs.m_transitions)
+    {
+        result.addTransition(transition.from + offset, transition.symbol, transition.to + offset);
+    }
+
+    for (size_t finalState : lhs.m_finalStates)
+    {
+        for (size_t startState : rhs.m_startStates)
+        {
+            result.addTransition(finalState, EPSILON, startState + offset);
+        }
+    }
+
+    result.m_finalStates = rhs.m_finalStates;
+    return result;
+}
+
+Automaton Star(const Automaton& automaton)
+{
+    Automaton result(automaton.m_alphabet);
+    result.m_transitions = automaton.m_transitions;
+    result.m_states = automaton.m_states;
+    result.m_finalStates = automaton.m_finalStates;
+
+    size_t newStateId = 0;
+    for (size_t stateId : automaton.m_states)
+    {
+        if (stateId >= newStateId) newStateId = stateId + 1;
+    }
+    result.createNewState(newStateId, true, true);
+    for (size_t startState : automaton.m_startStates)
+    {
+        result.addTransition(newStateId, EPSILON, startState);
+    }
+    for (size_t finalState : automaton.m_finalStates)
+    {
+        result.addTransition(finalState, EPSILON, newStateId);
+    }
+    return result;
+}
