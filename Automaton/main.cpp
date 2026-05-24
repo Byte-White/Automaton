@@ -1,5 +1,9 @@
 #include <iostream>
 #include "Automaton.hpp"
+#include "UnionRegEx.hpp"
+#include "ConcatRegEx.hpp"
+#include "StarRegEx.hpp"
+#include "LiteralRegEx.hpp"
 
 void hasABBA()
 {
@@ -67,6 +71,7 @@ void nonDeterministic()
 	automaton.minimise();
 	std::cout << "det min: " << automaton.recognise("abab") << std::endl;;
 	automaton.print();
+	std::cout << std::endl;
 }
 
 void KleeneStar()
@@ -79,6 +84,25 @@ void KleeneStar()
 	automaton.addTransition(1, 'b', 2);
 	automaton = Star(automaton);
 	std::cout << automaton.recognise("ababab");
+	std::cout << std::endl;
+}
+
+void Regex()
+{
+	std::cout << "(ab+cd).(ef)*\n";
+	RegEx* regex = new ConcatRegEx(UnionRegEx(LiteralRegEx("ab"), LiteralRegEx("cd")), StarRegEx(LiteralRegEx("ef")));
+
+	while (true)
+	{
+		std::string word;
+		std::cout << "Enter a word: ";
+		std::cin >> word;
+		if (word == "exit")
+			break;
+		std::cout << "regex('" << word << "'): " << regex->eval(word) << std::endl;
+	}
+
+	delete regex;
 }
 
 int main()
@@ -95,4 +119,7 @@ int main()
 	nonDeterministic();
 	std::cout << "--KLEENE STAR--" << std::endl;
 	KleeneStar();
+	std::cout << "--REGEX--" << std::endl;
+	Regex();
+
 }

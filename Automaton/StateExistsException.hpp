@@ -1,6 +1,7 @@
 #pragma once
 #include "Exception.hpp"
 
+
 class StateExistsException : public Exception
 {
 	size_t m_id;
