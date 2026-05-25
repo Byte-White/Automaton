@@ -9,7 +9,8 @@ public:
 	StarRegEx& operator=(const StarRegEx& other);
 	virtual ~StarRegEx();
 	bool eval(const std::string& word) const override;
-
+	Automaton toAutomaton() const override;
+	std::string toString() const override;
 	RegEx* clone() const override;
 private:
 	RegEx* inner;

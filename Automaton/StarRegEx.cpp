@@ -31,6 +31,16 @@ bool StarRegEx::eval(const std::string& word) const
 	return false;
 }
 
+Automaton StarRegEx::toAutomaton() const
+{
+	return Star(inner->toAutomaton());
+}
+
+std::string StarRegEx::toString() const
+{
+	return "" + inner->toString() + "*";
+}
+
 RegEx* StarRegEx::clone() const
 {
 	return new StarRegEx(*inner);

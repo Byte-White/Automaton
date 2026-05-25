@@ -4,6 +4,7 @@
 #include "ConcatRegEx.hpp"
 #include "StarRegEx.hpp"
 #include "LiteralRegEx.hpp"
+#include "RegExParser.hpp"
 
 void hasABBA()
 {
@@ -105,6 +106,15 @@ void Regex()
 	delete regex;
 }
 
+void RegexToAutomaton()
+{
+	RegEx* regex = RegEx::parse("abc*+d");
+	std::cout << "Expression: " << regex->toString() << "\n";
+	auto a = regex->toAutomaton();
+	a.print();
+	delete regex;
+}
+ 
 int main()
 {
 	std::cout.flags(std::ios::boolalpha);
@@ -120,6 +130,6 @@ int main()
 	std::cout << "--KLEENE STAR--" << std::endl;
 	KleeneStar();
 	std::cout << "--REGEX--" << std::endl;
-	Regex();
-
+	RegexToAutomaton();
+	
 }
