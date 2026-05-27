@@ -101,25 +101,25 @@ Automaton AutomatonSerializer::deserialize(std::istream& is)
 std::string AutomatonSerializer::toDot(const Automaton& automaton)
 {
     std::string result = "digraph Automaton {\n";
-    result += "  rankdir=LR;\n";
-    result += "  node [shape=circle];\n";
+    result += "rankdir=LR;\n";
+    result += "node [shape=circle];\n";
 
     for (size_t finalState : automaton.m_finalStates)
     {
-        result += "  " + std::to_string(finalState) + " [shape=doublecircle];\n";
+        result += std::to_string(finalState) + " [shape=doublecircle];\n";
     }
 
     for (size_t startState : automaton.m_startStates)
     {
         std::string startNode = "empty_start_" + std::to_string(startState);
-        result += "  " + startNode + " [label=\"\", shape=point, width=0];\n";
-        result += "  " + startNode + " -> " + std::to_string(startState) + ";\n";
+        result += startNode + " [label=\"\", shape=point, width=0];\n";
+        result += startNode + " -> " + std::to_string(startState) + " [color=\"green\"];\n";
     }
 
     for (const Transition& transition : automaton.m_transitions)
     {
-        result += "  " + std::to_string(transition.from) + " -> " + std::to_string(transition.to);
-        result += " [label=\"";
+        result += std::to_string(transition.from) + " -> " + std::to_string(transition.to);
+        result += "[label=\"";
 
         if (transition.symbol == EPSILON)
         {

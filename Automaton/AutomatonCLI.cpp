@@ -38,6 +38,8 @@ void AutomatonCLI::reset()
 
 void AutomatonCLI::run()
 {
+	std::cin.exceptions(std::ios_base::failbit);
+
 	while (m_isRunning)
 	{
 		try 
@@ -70,6 +72,10 @@ void AutomatonCLI::run()
 		catch (Exception ex)
 		{
 			std::cout << "Error: " << ex.toString() << std::endl;
+		}
+		catch (const std::ios_base::failure& ex)
+		{
+			std::cout << "Invalid input. Please try again.\n";
 		}
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -184,6 +190,7 @@ void AutomatonCLI::removeCmd()
 	size_t id;
 	std::cin >> id;
 	removeAutomatonById(id);
+	std::cout << "automaton " << id << " has been removed\n";
 }
 
 void AutomatonCLI::resetCmd()
