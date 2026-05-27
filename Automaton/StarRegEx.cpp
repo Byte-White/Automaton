@@ -38,7 +38,7 @@ Automaton StarRegEx::toAutomaton() const
 
 std::string StarRegEx::toString() const
 {
-	return "" + inner->toString() + "*";
+	return "(" + inner->toString() + ")*";
 }
 
 RegEx* StarRegEx::clone() const

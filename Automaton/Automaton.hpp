@@ -21,30 +21,7 @@ struct Transition
 class Automaton
 {
 public:
-    void print() const
-    {
-        std::cout << "States: ";
-        for (size_t state : m_states)
-        {
-            std::cout << state << " ";
-        }
-        std::cout << "\nStart: ";
-        for (size_t state : m_startStates)
-        {
-            std::cout << state << " ";
-        }
-        std::cout << "\nFinal: ";
-        for (size_t state : m_finalStates)
-        {
-            std::cout << state << " ";
-        }
-        std::cout << "\nTransitions:\n";
-        for (const auto& transition : m_transitions)
-        {
-            std::cout << transition.from << " --" << (transition.symbol == EPSILON ? "(epsilon)" : std::string(1, transition.symbol)) << "--> " << transition.to << "\n";
-        }
-    }
-public:
+    friend class AutomatonSerializer;
 
     Automaton(const std::vector<char> alphabet);
 
@@ -79,6 +56,11 @@ public:
     }
 
     ~Automaton() = default;
+
+	size_t getStatesCount() const
+	{
+		return m_states.size();
+	}
 
 private:
     bool hasState(size_t id) const

@@ -21,7 +21,7 @@ Automaton LiteralRegEx::toAutomaton() const
 
 	Automaton automaton(alphabet);
 	size_t id = 0;
-	
+
 	for (size_t i = 0; i <= m_word.size(); i++)
 		automaton.createNewState(i, i == 0, i == m_word.size());
 
