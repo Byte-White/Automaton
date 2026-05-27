@@ -289,6 +289,7 @@ Automaton Concat(const Automaton& lhs, const Automaton& rhs)
     Automaton result(newAlphabet);
     result.m_states = lhs.m_states;
     result.m_startStates = lhs.m_startStates;
+    result.m_transitions = lhs.m_transitions;
 
     size_t offset = 0;
     for (size_t stateId : lhs.m_states)
@@ -299,10 +300,7 @@ Automaton Concat(const Automaton& lhs, const Automaton& rhs)
     {
         result.m_states.push_back(stateId + offset);
     }
-    for (size_t startState : rhs.m_startStates)
-    {
-        result.m_startStates.push_back(startState + offset);
-    }
+
     for (size_t finalState : rhs.m_finalStates)
     {
         result.m_finalStates.push_back(finalState + offset);
@@ -319,8 +317,6 @@ Automaton Concat(const Automaton& lhs, const Automaton& rhs)
             result.addTransition(finalState, EPSILON, startState + offset);
         }
     }
-
-    result.m_finalStates = rhs.m_finalStates;
     return result;
 }
 

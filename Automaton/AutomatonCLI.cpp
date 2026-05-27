@@ -72,6 +72,7 @@ void AutomatonCLI::run()
 			std::cout << "Error: " << ex.toString() << std::endl;
 		}
 		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	}
 }
 
@@ -125,6 +126,7 @@ void AutomatonCLI::openCmd()
 		addAutomaton(automaton);
 	}
 	file.close();
+	std::cout << "Loaded " << count << " automatons from file " << filename << std::endl;
 }
 
 void AutomatonCLI::saveCmd()
@@ -273,7 +275,7 @@ void AutomatonCLI::regCmd()
 	RegEx* expr = RegEx::parse(regex);
 	Automaton automaton = expr->toAutomaton();
 	addAutomaton(automaton);
-	std::cout << "Created a new automaton with id " << (idCounter - 1) << " from regular expression \"" << regex << "\"\n";
+	std::cout << "Created a new automaton with id " << (idCounter - 1) << " from regular expression \"" << expr->toString() << "\"\n";
 	delete expr;
 }
 

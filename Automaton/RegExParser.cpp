@@ -87,8 +87,7 @@ RegEx* RegExParser::parseStar()
 
 RegEx* RegExParser::parseBrackets()
 {
-	if (get() != '(')
-		throw ParserException("Expected '('", m_expr, m_idx);
+	get();
 
 	RegEx* inside = parseUnion();
 
@@ -103,15 +102,14 @@ RegEx* RegExParser::parseBrackets()
 
 RegEx* RegExParser::parseLiteral()
 {
-	std::string word;
-	while (true)
+	char c = get();
+
+	if (c == '\0' || c == '(' || c == ')' || c == '+' || c == '*')
 	{
-		char c = peek();
-		if (c == '\0' || c == '(' || c == ')' || c == '*' || c == '+')
-			break;
-		word += get();
+		throw ParserException("Unexpected character", m_expr, m_idx);
 	}
-	return new LiteralRegEx(word);
+
+	return new LiteralRegEx(std::string(1, c));
 }
 
 char RegExParser::peek() const
