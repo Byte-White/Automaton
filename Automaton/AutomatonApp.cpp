@@ -1,4 +1,4 @@
-#include "AutomatonCLI.hpp"
+#include "UI/AutomatonCLI.hpp"
  
 int main()
 {

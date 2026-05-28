@@ -3,13 +3,13 @@
 #include <fstream>
 #include <string>
 
-#include "Automaton.hpp"
-#include "UnionRegEx.hpp"
-#include "ConcatRegEx.hpp"
-#include "StarRegEx.hpp"
-#include "LiteralRegEx.hpp"
-#include "RegExParser.hpp"
-#include "AutomatonSerializer.hpp"
+#include "../Automaton/Automaton.hpp"
+#include "../RegEx/UnionRegEx.hpp"
+#include "../RegEx/ConcatRegEx.hpp"
+#include "../RegEx/StarRegEx.hpp"
+#include "../RegEx/LiteralRegEx.hpp"
+#include "../RegEx/RegExParser.hpp"
+#include "../Automaton/AutomatonSerializer.hpp"
 
 
 class AutomatonCLI

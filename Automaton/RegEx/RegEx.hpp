@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "Automaton.hpp"
+#include "../Automaton/Automaton.hpp"
 
 class RegEx
 {

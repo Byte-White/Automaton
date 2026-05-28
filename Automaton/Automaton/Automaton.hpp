@@ -5,9 +5,9 @@
 #include <set>
 #include <iostream>
 
-#include "Exception.hpp"
-#include "StateExistsException.hpp"
-#include "BadSymbolException.hpp"
+#include "../Exceptions/Exception.hpp"
+#include "../Exceptions/StateExistsException.hpp"
+#include "../Exceptions/BadSymbolException.hpp"
 
 constexpr char EPSILON = '\0';
 

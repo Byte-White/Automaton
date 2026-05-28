@@ -1,6 +1,6 @@
 #include "RegExParser.hpp"
-#include "Exception.hpp"
-#include "ParserException.hpp"
+#include "../Exceptions/Exception.hpp"
+#include "../Exceptions/ParserException.hpp"
 
 RegExParser::RegExParser(const std::string& expr)
 	:m_expr(expr), m_idx(0)
