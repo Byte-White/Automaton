@@ -9,6 +9,7 @@ bool LiteralRegEx::eval(const std::string& word) const
 
 std::string LiteralRegEx::toString() const
 {
+	if (m_word.empty()) return "@";
 	return m_word;
 }
 

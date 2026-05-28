@@ -69,7 +69,8 @@ void AutomatonCLI::run()
 			else if (cmd == "draw") drawCmd();
 			else std::cout << "not a valid command. (help to see all commands)\n";
 		}
-		catch (Exception ex)
+
+		catch (const Exception& ex)
 		{
 			std::cout << "Error: " << ex.toString() << std::endl;
 		}
@@ -239,6 +240,7 @@ void AutomatonCLI::recogniseCmd()
 	size_t id;
 	std::string word;
 	std::cin >> id >> word;
+	if (word == "@") word = "";
 	bool recognised = getAutomatonById(id).recognise(word);
 	std::cout << "Automaton " << id << (recognised ? " recognises " : " does not recognise ") << "the word \"" << word << "\"\n";
 }

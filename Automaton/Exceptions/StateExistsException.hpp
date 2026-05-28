@@ -8,7 +8,7 @@ class StateExistsException : public Exception
 	bool m_exists;
 public:
 	StateExistsException(size_t id, bool exists) : Exception(""), m_id(id), m_exists(exists) {}
-	const std::string& toString() const override
+	std::string toString() const override
 	{
 		return "State " + std::to_string(m_id) + (m_exists ? " already exists." : " does not exist.");
 	}

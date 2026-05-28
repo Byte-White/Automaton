@@ -104,9 +104,11 @@ RegEx* RegExParser::parseLiteral()
 {
 	char c = get();
 
+	if (c == '@') return new LiteralRegEx("");
+
 	if (c == '\0' || c == '(' || c == ')' || c == '+' || c == '*')
 	{
-		throw ParserException("Unexpected character", m_expr, m_idx);
+		throw ParserException("Expected a literal", m_expr, m_idx);
 	}
 
 	return new LiteralRegEx(std::string(1, c));
