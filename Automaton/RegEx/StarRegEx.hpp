@@ -15,6 +15,8 @@ public:
 	StarRegEx(const RegEx& inner);
 	StarRegEx(const StarRegEx& other);
 	StarRegEx& operator=(const StarRegEx& other);
+	StarRegEx(StarRegEx&& other) noexcept;
+	StarRegEx& operator=(StarRegEx&& other) noexcept;
 	virtual ~StarRegEx();
 	bool eval(const std::string& word) const override;
 	Automaton toAutomaton() const override;

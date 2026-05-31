@@ -14,6 +14,23 @@ StarRegEx& StarRegEx::operator=(const StarRegEx& other)
 	return *this;
 }
 
+StarRegEx::StarRegEx(StarRegEx&& other) noexcept
+{
+	inner = other.inner;
+	other.inner = nullptr;
+}
+
+StarRegEx& StarRegEx::operator=(StarRegEx&& other) noexcept
+{
+	if (this != &other)
+	{
+		free();
+		inner = other.inner;
+		other.inner = nullptr;
+	}
+	return *this;
+}
+
 StarRegEx::~StarRegEx()
 {
 	free();

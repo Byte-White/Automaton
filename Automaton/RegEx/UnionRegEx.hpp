@@ -1,29 +1,20 @@
 ﻿#pragma once
-#include "RegEx.hpp"
+#include "BinaryOperationRegEx.hpp"
 
 
 /**
 * @brief Класът UnionRegEx представлява обединение на два други регулярни израза.
 **/
-class UnionRegEx : public RegEx
+class UnionRegEx : public BinaryOperationRegEx
 {
 public:
-
 	/**
-	* @param lhs Левият израз на обединението, който е указател към обект от тип RegEx.
-	* @param rhs Десният израз на обединението, който е указател към обект от тип RegEx.
+	* @brief Конструктор, който приема два регулярни израза и създава нов обект от тип UnionRegEx.
 	**/
-	UnionRegEx(const RegEx& lhs, const RegEx& rhs);
-	UnionRegEx(const UnionRegEx& other);
-	UnionRegEx& operator=(const UnionRegEx& other);
-	virtual ~UnionRegEx();
+	UnionRegEx(const RegEx& lhs, const RegEx& rhs) : BinaryOperationRegEx(lhs, rhs) {}
+
 	std::string toString() const override;
 	Automaton toAutomaton() const override;
 	bool eval(const std::string& word) const override;
 	RegEx* clone() const override;
-
-private:
-	RegEx* lhs;
-	RegEx* rhs;
-	void free();
 };

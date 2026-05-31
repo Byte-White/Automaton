@@ -1,24 +1,5 @@
 ﻿#include "ConcatRegEx.hpp"
 
-ConcatRegEx::ConcatRegEx(const RegEx& lhs, const RegEx& rhs) : lhs(lhs.clone()), rhs(rhs.clone()) {}
-
-ConcatRegEx::ConcatRegEx(const ConcatRegEx& other) : lhs(other.lhs->clone()), rhs(other.rhs->clone()) {}
-
-ConcatRegEx& ConcatRegEx::operator=(const ConcatRegEx& other)
-{
-	if (this != &other)
-	{
-		free();
-		lhs = other.lhs->clone();
-		rhs = other.rhs->clone();
-	}
-	return *this;
-}
-
-ConcatRegEx::~ConcatRegEx()
-{
-	free();
-}
 
 std::string ConcatRegEx::toString() const
 {
@@ -41,10 +22,4 @@ bool ConcatRegEx::eval(const std::string& word) const
 RegEx* ConcatRegEx::clone() const
 {
 	return new ConcatRegEx(*lhs, *rhs);
-}
-
-void ConcatRegEx::free()
-{
-	delete lhs;
-	delete rhs;
 }
