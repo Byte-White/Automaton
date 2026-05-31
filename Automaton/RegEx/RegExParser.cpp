@@ -1,4 +1,4 @@
-#include "RegExParser.hpp"
+﻿#include "RegExParser.hpp"
 #include "../Exceptions/Exception.hpp"
 #include "../Exceptions/ParserException.hpp"
 

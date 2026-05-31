@@ -1,4 +1,4 @@
-#include "AutomatonSerializer.hpp"
+﻿#include "AutomatonSerializer.hpp"
 
 std::string AutomatonSerializer::serializeStates(const std::vector<size_t>& container)
 {

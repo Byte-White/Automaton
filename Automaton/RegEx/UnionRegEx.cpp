@@ -1,4 +1,4 @@
-#include "UnionRegEx.hpp"
+﻿#include "UnionRegEx.hpp"
 
 UnionRegEx::UnionRegEx(const RegEx& lhs, const RegEx& rhs) : lhs(lhs.clone()), rhs(rhs.clone()) {}
 

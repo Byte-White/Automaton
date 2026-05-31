@@ -1,4 +1,4 @@
-#include "StarRegEx.hpp"
+﻿#include "StarRegEx.hpp"
 
 StarRegEx::StarRegEx(const RegEx& inner) : inner(inner.clone()) {}
 

@@ -1,4 +1,21 @@
-#include "Automaton.hpp"
+﻿#include "Automaton.hpp"
+
+std::vector<size_t> bubbleSort(const std::vector<size_t>& arr)
+{
+    std::vector<size_t> result = arr;
+    size_t size = arr.size();
+    for (size_t i = 0; i < size; i++)
+    {
+        for (size_t j = 0; j < size - i - 1; j++)
+        {
+            if (result[j] > result[j + 1])
+            {
+                std::swap(result[j], result[j + 1]);
+            }
+        }
+    }
+    return result;
+}
 
 void Automaton::pushStatesWithEpsilon(std::vector<size_t>& closure, std::vector<size_t>& stack, size_t stateId) const
 {
@@ -183,22 +200,7 @@ void Automaton::reverse()
     *this = getReversed();
 }
 
-std::vector<size_t> Automaton::bubbleSort(const std::vector<size_t>& arr) const
-{
-    std::vector<size_t> result = arr;
-    int size = arr.size();
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size - i - 1; j++)
-        {
-            if (result[j] > result[j + 1])
-            {
-                std::swap(result[j], result[j + 1]);
-            }
-        }
-    }
-    return result;
-}
+
 
 void Automaton::pushReachableSubsets(Automaton& dfa, std::vector<std::vector<size_t>>& stateSubsets) const
 {

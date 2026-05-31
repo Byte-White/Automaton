@@ -1,4 +1,4 @@
-#include "AutomatonCLI.hpp"
+﻿#include "AutomatonCLI.hpp"
 
 Automaton& AutomatonCLI::getAutomatonById(size_t id)
 {

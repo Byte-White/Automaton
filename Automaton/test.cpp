@@ -1,7 +1,8 @@
+﻿#ifdef AUTOMATON_RUN_TEST
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
-#include "Automaton.hpp"
-#include "RegExParser.hpp"
+#include "Automaton/Automaton.hpp"
+#include "RegEx/RegExParser.hpp"
 
 Automaton createSimpleAutomaton(char c) {
     Automaton aut({ c });
@@ -143,3 +144,4 @@ TEST_CASE("Reverse")
     CHECK(aut.recognise("ba") == true);
 
 }
+#endif

@@ -1,5 +1,5 @@
-#include "UI/AutomatonCLI.hpp"
- 
+﻿#include "UI/AutomatonCLI.hpp"
+
 int main()
 {
 	AutomatonCLI cli;

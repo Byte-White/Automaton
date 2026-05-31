@@ -1,4 +1,4 @@
-#include "LiteralRegEx.hpp"
+﻿#include "LiteralRegEx.hpp"
 
 LiteralRegEx::LiteralRegEx(const std::string& word) : m_word(word) {}
 

@@ -1,4 +1,4 @@
-#include "ConcatRegEx.hpp"
+﻿#include "ConcatRegEx.hpp"
 
 ConcatRegEx::ConcatRegEx(const RegEx& lhs, const RegEx& rhs) : lhs(lhs.clone()), rhs(rhs.clone()) {}
 

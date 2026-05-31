@@ -1,5 +1,9 @@
-#include "Exception.hpp"
+﻿#include "Exception.hpp"
 
+
+/**
+* @brief Изключение, което се хвърля при опит за използване на символ, който не е част от азбуката на автомата. Съдържа информация за символа, който е бил използван и не е валиден.
+**/
 class BadSymbolException : public Exception
 {
 	char m_symbol;
