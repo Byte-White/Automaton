@@ -2,7 +2,7 @@
 #include "RegExParser.hpp"
 
 
-RegEx* RegEx::parse(const std::string& expr)
+UniquePtr<RegEx> RegEx::parse(const std::string& expr)
 {
 	RegExParser parser(expr);
 	return parser.parse();

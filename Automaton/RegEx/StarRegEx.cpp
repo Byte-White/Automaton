@@ -1,6 +1,11 @@
 ﻿#include "StarRegEx.hpp"
 
-StarRegEx::StarRegEx(const RegEx& inner) : inner(inner.clone()) {}
+StarRegEx::StarRegEx(const RegEx& inner)
+{
+	this->inner.reset(inner.clone());
+}
+
+StarRegEx::StarRegEx(RegEx* inner) : inner(inner) {}
 
 StarRegEx::StarRegEx(const StarRegEx& other) : inner(other.inner->clone()) {}
 
@@ -8,32 +13,9 @@ StarRegEx& StarRegEx::operator=(const StarRegEx& other)
 {
 	if (this != &other)
 	{
-		free();
-		inner = other.inner->clone();
+		inner.reset(other.inner->clone());
 	}
 	return *this;
-}
-
-StarRegEx::StarRegEx(StarRegEx&& other) noexcept
-{
-	inner = other.inner;
-	other.inner = nullptr;
-}
-
-StarRegEx& StarRegEx::operator=(StarRegEx&& other) noexcept
-{
-	if (this != &other)
-	{
-		free();
-		inner = other.inner;
-		other.inner = nullptr;
-	}
-	return *this;
-}
-
-StarRegEx::~StarRegEx()
-{
-	free();
 }
 
 bool StarRegEx::eval(const std::string& word) const
@@ -60,10 +42,5 @@ std::string StarRegEx::toString() const
 
 RegEx* StarRegEx::clone() const
 {
-	return new StarRegEx(*inner);
-}
-
-void StarRegEx::free()
-{
-	delete inner;
+	return new StarRegEx(inner->clone());
 }

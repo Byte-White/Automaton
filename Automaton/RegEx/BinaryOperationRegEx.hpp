@@ -1,26 +1,29 @@
-#pragma once
+п»ї#pragma once
 #include "RegEx.hpp"
+#include "../Utils/UniquePtr.hpp"
 
 /**
-* @brief Класът BinaryOperationRegEx е абстрактен базов клас за представяне на бинарни операции между регулярни изрази, като обединение и конкатенация. Той съдържа два указателя към обекти от тип RegEx, които представляват лявата и дясната част на операцията.
+* @brief РљР»Р°СЃСЉС‚ BinaryOperationRegEx Рµ Р°Р±СЃС‚СЂР°РєС‚РµРЅ Р±Р°Р·РѕРІ РєР»Р°СЃ Р·Р° РїСЂРµРґСЃС‚Р°РІСЏРЅРµ РЅР° Р±РёРЅР°СЂРЅРё РѕРїРµСЂР°С†РёРё РјРµР¶РґСѓ СЂРµРіСѓР»СЏСЂРЅРё РёР·СЂР°Р·Рё, РєР°С‚Рѕ РѕР±РµРґРёРЅРµРЅРёРµ Рё РєРѕРЅРєР°С‚РµРЅР°С†РёСЏ. РўРѕР№ СЃСЉРґСЉСЂР¶Р° РґРІР° СѓРєР°Р·Р°С‚РµР»СЏ РєСЉРј РѕР±РµРєС‚Рё РѕС‚ С‚РёРї RegEx, РєРѕРёС‚Рѕ РїСЂРµРґСЃС‚Р°РІР»СЏРІР°С‚ Р»СЏРІР°С‚Р° Рё РґСЏСЃРЅР°С‚Р° С‡Р°СЃС‚ РЅР° РѕРїРµСЂР°С†РёСЏС‚Р°.
 **/
 class BinaryOperationRegEx : public RegEx
 {
 protected:
-	RegEx* lhs;
-	RegEx* rhs;
+	UniquePtr<RegEx> lhs;
+	UniquePtr<RegEx> rhs;
 public:
 	/**
-	* @brief Конструктор, който приема два регулярни израза и създава нов обект от тип BinaryOperationRegEx.
+	* @brief РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ, РєРѕР№С‚Рѕ РїСЂРёРµРјР° РґРІР° СЂРµРіСѓР»СЏСЂРЅРё РёР·СЂР°Р·Р°. РљР»Р°СЃСЉС‚ РєРѕРїРёСЂР° РїРѕРґР°РґРµРЅРёС‚Рµ СЂРµРіСѓР»СЏСЂРЅРё РёР·СЂР°Р·Рё.
+	* 
 	**/
-	BinaryOperationRegEx(const RegEx& lhs, const RegEx& rhs);
+	BinaryOperationRegEx(const RegEx& lhs,const RegEx& rhs);
+	/**
+	* @brief РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ, РєРѕР№С‚Рѕ РїСЂРёРµРјР° СѓРєР°Р·Р°С‚РµР»Рё РєСЉРј РґРІР° СЂРµРіСѓР»СЏСЂРЅРё РёР·СЂР°Р·Р° Рё РіРё РїСЂРёСЃРІРѕСЏРІР° РЅР° С‡Р»РµРЅРѕРІРµС‚Рµ РЅР° РєР»Р°СЃР°. РљР»Р°СЃСЉС‚ РїРѕРµРјР° СЃРѕР±СЃС‚РІРµРЅРѕСЃС‚С‚Р° РІСЉСЂС…Сѓ С‚РµР·Рё СѓРєР°Р·Р°С‚РµР»Рё Рё С‰Рµ РіРё РѕСЃРІРѕР±РѕРґРё РїСЂРё СѓРЅРёС‰РѕР¶Р°РІР°РЅРµ РЅР° РѕР±РµРєС‚Р°.
+	**/
+	BinaryOperationRegEx(RegEx* lhs, RegEx* rhs);
 	BinaryOperationRegEx(const BinaryOperationRegEx& other);
 	BinaryOperationRegEx& operator=(const BinaryOperationRegEx& other);
-	BinaryOperationRegEx(BinaryOperationRegEx&& other) noexcept;
 
-	BinaryOperationRegEx& operator=(BinaryOperationRegEx&& other) noexcept;
-
-	virtual ~BinaryOperationRegEx();
-private:
-	void free();
+	BinaryOperationRegEx(BinaryOperationRegEx&& other) noexcept = default;
+	BinaryOperationRegEx& operator=(BinaryOperationRegEx&& other) noexcept = default;
+	virtual ~BinaryOperationRegEx() = default;
 };

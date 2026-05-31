@@ -281,11 +281,10 @@ void AutomatonCLI::regCmd()
 {
 	std::string regex;
 	std::cin >> regex;
-	RegEx* expr = RegEx::parse(regex);
+	UniquePtr<RegEx> expr = RegEx::parse(regex);
 	Automaton automaton = expr->toAutomaton();
 	addAutomaton(automaton);
 	std::cout << "Created a new automaton with id " << (idCounter - 1) << " from regular expression \"" << expr->toString() << "\"\n";
-	delete expr;
 }
 
 void AutomatonCLI::drawCmd()

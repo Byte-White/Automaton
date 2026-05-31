@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "RegEx.hpp"
+#include "../Utils/UniquePtr.hpp"
 
 
 /**
@@ -8,21 +9,25 @@
 class StarRegEx : public RegEx
 {
 public:
-
 	/**
-	* @brief Конструктор, който приема друг регулярен израз и създава звезда на този израз.
+	* @brief Конструктор, който приема друг регулярен израз и създава звезда на този израз. Класът копира подадения регулярен израз.
 	**/
 	StarRegEx(const RegEx& inner);
+	/**
+	* @brief Конструктор, който приема друг регулярен израз и създава звезда на този израз. Собствеността върху указателя се поема от класа StarRegEx, който ще го освободи при унищожаване на обекта.
+	**/
+	StarRegEx(RegEx* inner);
 	StarRegEx(const StarRegEx& other);
 	StarRegEx& operator=(const StarRegEx& other);
-	StarRegEx(StarRegEx&& other) noexcept;
-	StarRegEx& operator=(StarRegEx&& other) noexcept;
-	virtual ~StarRegEx();
+
+	StarRegEx(StarRegEx&& other) noexcept = default;
+	StarRegEx& operator=(StarRegEx&& other) noexcept = default;
+	virtual ~StarRegEx() = default;
+
 	bool eval(const std::string& word) const override;
 	Automaton toAutomaton() const override;
 	std::string toString() const override;
 	RegEx* clone() const override;
 private:
-	RegEx* inner;
-	void free();
+	UniquePtr<RegEx> inner;
 };

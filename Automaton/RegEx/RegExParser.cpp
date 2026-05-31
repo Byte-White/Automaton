@@ -2,128 +2,147 @@
 #include "../Exceptions/Exception.hpp"
 #include "../Exceptions/ParserException.hpp"
 
+bool isSpecialChar(char c)
+{
+    return c == '\0' || c == '(' || c == ')' || c == '+' || c == '*' || c == '[' || c == ']';
+}
+
 RegExParser::RegExParser(const std::string& expr)
-	:m_expr(expr), m_idx(0)
+    : m_expr(expr), m_idx(0)
 {
 }
 
-RegEx* RegExParser::parse()
+UniquePtr<RegEx> RegExParser::parse()
 {
-	RegEx* result = parseUnion();
+    UniquePtr<RegEx> result = parseUnion();
 
-	if (peek() != '\0')
-	{
-		delete result;
-		throw ParserException("Unexpected character", m_expr, m_idx);
-	}
+    if (peek() != '\0')
+    {
+        throw ParserException("Unexpected character", m_expr, m_idx);
+    }
 
-	return result;
+    return result;
 }
 
-RegEx* RegExParser::parseUnion()
+UniquePtr<RegEx> RegExParser::parseUnion()
 {
-	RegEx* left = parseConcat();
+    UniquePtr<RegEx> left = parseConcat();
 
-	while (peek() == '+')
-	{
-		get();
-		RegEx* right = parseConcat();
+    while (peek() == '+')
+    {
+        get();
+        UniquePtr<RegEx> right = parseConcat();
+        left.reset(new UnionRegEx(left.release(), right.release()));
+    }
 
-		RegEx* temp = new UnionRegEx(*left, *right);
-
-		delete left;
-		delete right;
-
-		left = temp;
-	}
-
-	return left;
+    return left;
 }
 
-RegEx* RegExParser::parseConcat()
+UniquePtr<RegEx> RegExParser::parseConcat()
 {
-	RegEx* left = parseStar();
+    UniquePtr<RegEx> left = parseStar();
 
-	while (true)
-	{
-		char c = peek();
+    while (true)
+    {
+        char c = peek();
 
-		if (c == '\0' || c == ')' || c == '+')
-			break;
+        if (c == '\0' || c == ')' || c == '+')
+            break;
 
-		RegEx* right = parseStar();
+        UniquePtr<RegEx> right = parseStar();
+        left.reset(new ConcatRegEx(left.release(), right.release()));
+    }
 
-		RegEx* temp = new ConcatRegEx(*left, *right);
-
-		delete left;
-		delete right;
-
-		left = temp;
-	}
-
-	return left;
-
+    return left;
 }
 
-RegEx* RegExParser::parseStar()
+UniquePtr<RegEx> RegExParser::parseStar()
 {
-	RegEx* expr = nullptr;
+    UniquePtr<RegEx> expr = nullptr;
 
-	if (peek() == '(')
-		expr = parseBrackets();
-	else
-		expr = parseLiteral();
+    if (peek() == '(')
+        expr = parseParentheses();
+    else if (peek() == '[')
+        expr = parseBrackets();
+    else
+        expr = parseLiteral();
 
-	while (peek() == '*')
-	{
-		get();
-		RegEx* temp = new StarRegEx(*expr);
-		delete expr;
-		expr = temp;
-	}
+    while (peek() == '*')
+    {
+        get();
+        expr.reset(new StarRegEx(expr.release()));
+    }
 
-	return expr;
+    return expr;
 }
 
-RegEx* RegExParser::parseBrackets()
+UniquePtr<RegEx> RegExParser::parseParentheses()
 {
-	get();
+    get();
 
-	RegEx* inside = parseUnion();
+    UniquePtr<RegEx> inside = parseUnion();
 
-	if (get() != ')')
-	{
-		delete inside;
-		throw ParserException("Expected ')'", m_expr, m_idx);
-	}
+    if (get() != ')')
+    {
+        throw ParserException("Expected ')'", m_expr, m_idx - 1);
+    }
 
-	return inside;
+    return inside;
 }
 
-RegEx* RegExParser::parseLiteral()
+UniquePtr<RegEx> RegExParser::parseBrackets()
 {
-	char c = get();
+    get();
 
-	if (c == '@') return new LiteralRegEx("");
+    char start = get();
+    if (isSpecialChar(start))
+    {
+        throw ParserException("Expected a start symbol", m_expr, m_idx - 1);
+    }
+    if (get() != '-')
+    {
+        throw ParserException("Expected '-'", m_expr, m_idx - 1);
+    }
 
-	if (c == '\0' || c == '(' || c == ')' || c == '+' || c == '*')
-	{
-		throw ParserException("Expected a literal", m_expr, m_idx);
-	}
+    char end = get();
+    if (isSpecialChar(end))
+    {
+        throw ParserException("Expected an end symbol", m_expr, m_idx - 1);
+    }
 
-	return new LiteralRegEx(std::string(1, c));
+    if (get() != ']')
+    {
+        throw ParserException("Expected ']'", m_expr, m_idx - 1);
+    }
+
+    return UniquePtr<RegEx>(new RangeRegEx(start, end));
+}
+
+UniquePtr<RegEx> RegExParser::parseLiteral()
+{
+    char c = get();
+
+    if (c == '@')
+        return UniquePtr<RegEx>(new LiteralRegEx(""));
+
+    if (isSpecialChar(c))
+    {
+        throw ParserException("Expected a literal", m_expr, m_idx - 1);
+    }
+
+    return UniquePtr<RegEx>(new LiteralRegEx(std::string(1, c)));
 }
 
 char RegExParser::peek() const
 {
-	if (m_idx < m_expr.size())
-		return m_expr[m_idx];
-	return '\0';
+    if (m_idx < m_expr.size())
+        return m_expr[m_idx];
+    return '\0';
 }
 
 char RegExParser::get()
 {
-	if (m_idx < m_expr.size())
-		return m_expr[m_idx++];
-	return '\0';
+    if (m_idx < m_expr.size())
+        return m_expr[m_idx++];
+    return '\0';
 }

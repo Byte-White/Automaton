@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <string>
 #include "../Automaton/Automaton.hpp"
+#include "../Utils/UniquePtr.hpp"
 
 /**
 * @brief Абстрактен базов клас за представяне на регулярни изрази.
@@ -30,5 +31,5 @@ public:
 	/**
 	* @brief Статична функция, която приема регулярен израз и връща указател към обект от тип RegEx.
 	**/
-	static RegEx* parse(const std::string& expr);
+	static UniquePtr<RegEx> parse(const std::string& expr);
 };

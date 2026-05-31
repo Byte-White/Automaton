@@ -2,6 +2,6 @@
 
 int main()
 {
-	AutomatonCLI cli;
-	cli.run();
+    AutomatonCLI cli;
+    cli.run();
 }

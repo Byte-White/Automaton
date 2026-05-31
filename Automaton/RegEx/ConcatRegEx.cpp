@@ -21,5 +21,5 @@ bool ConcatRegEx::eval(const std::string& word) const
 
 RegEx* ConcatRegEx::clone() const
 {
-	return new ConcatRegEx(*lhs, *rhs);
+	return new ConcatRegEx(lhs->clone(), rhs->clone());
 }

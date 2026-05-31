@@ -1,6 +1,10 @@
 ﻿#include "UnionRegEx.hpp"
 
 
+UnionRegEx::UnionRegEx(const RegEx& lhs, const RegEx& rhs) : BinaryOperationRegEx(lhs, rhs) {}
+
+UnionRegEx::UnionRegEx(RegEx* lhs, RegEx* rhs) : BinaryOperationRegEx(lhs, rhs) {}
+
 std::string UnionRegEx::toString() const
 {
 	return "(" + lhs->toString() + "+" + rhs->toString() + ")";
@@ -18,6 +22,6 @@ bool UnionRegEx::eval(const std::string& word) const
 
 RegEx* UnionRegEx::clone() const
 {
-	return new UnionRegEx(*lhs, *rhs);
+	return new UnionRegEx(lhs->clone(), rhs->clone());
 }
 
