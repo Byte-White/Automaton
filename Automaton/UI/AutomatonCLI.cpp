@@ -50,7 +50,8 @@ void AutomatonCLI::run()
 
 			if (cmd == "help") helpCmd();
 			else if (cmd == "exit") exitCmd();
-			else if (cmd == "open") openCmd();
+			else if (cmd == "open") loadCmd(true);
+			else if (cmd == "load") loadCmd(false);
 			else if (cmd == "saveall") saveAllCmd();
 			else if (cmd == "save") saveCmd();
 			else if (cmd == "list") listCmd();
@@ -87,10 +88,11 @@ void AutomatonCLI::helpCmd()
 {
 	std::cout
 		<< "exit - exits the program\n"
-		<< "open <filename> - opens a file with automatons.\n"
+		<< "open <filename> - opens a file with automata and removes all previous automata.\n"
+		<< "load <filename> - opens a file with automata and adds them to the list.\n"
 		<< "save <id> <filename> - saves an automaton in a file.\n"
-		<< "saveall <filename> - saves all automatons in a file.\n"
-		<< "list - lists all automatons.\n"
+		<< "saveall <filename> - saves all automata in a file.\n"
+		<< "list - lists all automata.\n"
 		<< "print <id> - prints an automaton.\n"
 		<< "remove <id> - removes an automaton.\n"
 		<< "deterministic <id> - checks if an automaton is deterministic.\n"
@@ -98,8 +100,8 @@ void AutomatonCLI::helpCmd()
 		<< "reverse <id> - reverses an automaton.\n"
 		<< "minimise <id> - minimises an automaton.\n"
 		<< "recognise <id> <word> - recognises a word.\n"
-		<< "union <id1> <id2> - union of two automatons.\n"
-		<< "concat <id1> <id2> - concat of two automatons.\n"
+		<< "union <id1> <id2> - union of two automata.\n"
+		<< "concat <id1> <id2> - concat of two automata.\n"
 		<< "star <id> - star of an automaton.\n"
 		<< "reg <regex> - creates an automaton from a regular expression.\n"
 		<< "draw <id> <filename> - creates a dot file that can be visualised with graphviz.\n";
@@ -117,14 +119,15 @@ void AutomatonCLI::exitCmd()
 	if (c == 'y') m_isRunning = false;
 }
 
-void AutomatonCLI::openCmd()
+void AutomatonCLI::loadCmd(bool resetList)
 {
 	std::string filename;
 	std::cin >> filename;
 
 	std::ifstream file(filename,std::ios::in);
 	if (!file.is_open()) throw Exception("Could not open file " + filename);
-	reset();
+	
+	if(resetList) reset();
 	int count;
 	file >> count;
 	for(int i = 0; i<count;i++)

@@ -35,7 +35,7 @@ public:
 	void run();
 	void helpCmd();
 	void exitCmd();
-	void openCmd(); 
+	void loadCmd(bool restartList); 
     void saveCmd();
     void saveAllCmd();
     void listCmd();
